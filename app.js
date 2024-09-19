@@ -1,116 +1,113 @@
 const apiKey = "ee6fd1c6d333c3b6966ad28fc92f9706"; // Your API key
 const apiUrl = `https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`;
-     // Update the DOM elements with fetched movie data
- let movieName =  document.getElementById("name");
- let movieDescription  =  document.getElementById("description");
- let duration =    document.getElementById("duration");
- let movieImg = document.getElementById("movie-poster");
- let mainContnet = document.getElementById("main-content");
- let currentIndex = 0; // To keep track of the current movie index
+const genreApiUrl = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`;
+const movieByGenreUrl = (genreId) => `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${genreId}`;
 
- const getMovieData = async () => {
-   try {
-     const response = await fetch(apiUrl);
-     const data = await response.json();
-     const movies = data.results; // Array of movies
- 
-     if (movies.length === 0) {
-       // Handle empty array case
-       console.log("No movies found.");
-       return;
-     }
- 
-     const movie = movies[currentIndex]; // Get the movie at the current index
- 
-     console.log(data);
-     
-     movieName.innerHTML = movie.title;
-     movieDescription.innerHTML = movie.overview;
-     movieImg.src = `https://image.tmdb.org/t/p/w500${movie.poster_path}`;
-   
-     if (movie.runtime) {
-       duration.innerHTML = `Duration: ${movie.runtime}`;
-     } else {
-       duration.innerHTML = "Time unknown";
-     }
- 
-     // Update currentIndex to the next movie
-     currentIndex = (currentIndex + 1) % movies.length;
- 
-   } catch (error) {
-     console.error("Error fetching movie data:", error);
-   }
- };
- 
- // Change movie every 4 seconds
- setInterval(getMovieData, 10000);
- 
-
-const getGenre = async () => {
-  const genreUrl = `https://api.themoviedb.org/3/genre/movie/list?api_key=${apiKey}`;
-
+// Fetch and display popular movies
+const getTrendingMovie = async () => {
   try {
-    const response = await fetch(genreUrl);
-    const data = await response.json();
+    const fetchData = await fetch(apiUrl);
+    const data = await fetchData.json();
 
-    const genreList = data.genres; // Array of genres
-    const genreContainer = document.getElementById("genre-container").querySelector('ul');
-    genreContainer.innerHTML = ""; // Clear the container before adding genres
+    if (fetchData.ok) {
+      console.log(data);
+      
+      // Function to update the movie details on the page
+      const updateMovieDetails = (index) => {
+        const movie = data.results[index]; // Get movie at the provided index
+        document.getElementById("move-name").innerHTML = movie.original_title;
+        document.getElementById("movie-description").innerHTML = movie.overview;
 
-    genreList.forEach(genre => {
-      const genreButton = document.createElement('li');
-      genreButton.classList.add('genre-btn');
-      genreButton.textContent = genre.name;
-      genreButton.dataset.genreId = genre.id; // Store genre id as data attribute
-      genreContainer.appendChild(genreButton);
-    });
+        const posterPath = movie.poster_path; // Get the poster path
+        const imageUrl = `https://image.tmdb.org/t/p/w500${posterPath}`; // Complete the image URL
 
-    // Add event listener to newly created genre buttons
-    genreContainer.querySelectorAll('.genre-btn').forEach(btn => {
-      btn.addEventListener("click", () => {
-        const genreId = btn.dataset.genreId;
-        getMoviesByGenre(genreId);
+        // Update the DOM element with the movie poster
+        document.getElementById("movie-poster").src = imageUrl;
+      };
+
+      // Initially display the first movie
+      updateMovieDetails(0);
+
+      // Select all buttons with the class 'nextbtn'
+      let nextBtns = document.querySelectorAll('.nextbtn');
+
+      // Loop over each button and add an event listener to update the movie for the corresponding index
+      nextBtns.forEach((btn, index) => {
+        btn.addEventListener("click", () => {
+          // Update the movie details based on the button's index
+          updateMovieDetails(index);
+        });
       });
-    });
 
+    }
   } catch (error) {
-    console.error("Error fetching genres:", error);
+    console.log(error);
   }
 };
 
-// Function to fetch and display movies of a specific genre
+getTrendingMovie();
 
-const getMoviesByGenre = async (genreId) => {
-  const discoverUrl = `https://api.themoviedb.org/3/discover/movie?api_key=${apiKey}&with_genres=${genreId}`;
-
+const getMovieGenreMoveList = async () => {
   try {
-    const response = await fetch(discoverUrl);
-    const data = await response.json();
-    const movies = data.results;
-    console.log(movies);
+    // Step 1: Fetch the list of genres
+    const genreResponse = await fetch(genreApiUrl);
+    const genreData = await genreResponse.json();
 
-    // Update the existing movie elements in the DOM
-    const movieGallery = document.querySelector('#movie-gallery');
-    movieGallery.innerHTML = ''; // Clear the existing content
+    if (genreResponse.ok) {
+      const genres = genreData.genres;
+      let updateGenreHTML = ''; // Initialize the HTML string
 
-    movies.forEach(movie => {
-      const movieCard = document.createElement('div');
-      movieCard.classList.add('movie-card');
+      // Loop through the first few genres (example: the first 6 genres)
+      for (let i = 0; i < 6; i++) {
+        const genre = genres[i];
 
-      movieCard.innerHTML = `
-        <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}" class="movie-poster">
-        <h3 class="movie-title">${movie.title}</h3>
-        <p class="movie-year">${movie.release_date.split("-")[0]}</p>
-      `;
+        // Step 2: Fetch movies for each genre
+        const movieResponse = await fetch(movieByGenreUrl(genre.id));
+        const movieData = await movieResponse.json();
 
-      movieGallery.appendChild(movieCard);
-    });
+        if (movieResponse.ok && movieData.results.length > 0) {
+          let moviesHTML = ''; // For movies inside the genre
 
+          // Step 3: Loop through the first 4 movies in the genre
+          for (let j = 0; j < Math.min(4, movieData.results.length); j++) {
+            const movie = movieData.results[j];
+
+            // Append each movie's HTML in its own flex container
+            moviesHTML += `
+              <div class="movie-item">
+                <div class="imgContainer">
+                  <img src="https://image.tmdb.org/t/p/w500${movie.poster_path}" alt="${movie.title}">
+                </div>
+                <div class="contentMovie">
+                  <p class="trendingMovieName">${movie.title}</p>
+                  <p class="movie-Year">${new Date(movie.release_date).getFullYear()}</p>
+                </div>
+              </div>`;
+          }
+
+          // Step 4: Add the genre and its movies to the main container
+          updateGenreHTML += `
+            <div class="genre-block">
+              <h2 class="categoryName">${genre.name}</h2>
+              <div class="movies-row">
+                ${moviesHTML}
+              </div>
+            </div>`;
+        } else {
+          console.log(`No movies found for genre: ${genre.name}`);
+        }
+      }
+
+      // Append the final HTML to the trend-container
+      document.querySelector('.trend-container').innerHTML = updateGenreHTML;
+    } else {
+      console.log("Failed to fetch genres");
+    }
   } catch (error) {
-    console.error("Error fetching movies by genre:", error);
+    console.log("Error:", error);
   }
 };
 
-
-getGenre(); // Call the function to fetch and display genres
+// Call the function to fetch genres and their movies
+getMovieGenreMoveList();
 

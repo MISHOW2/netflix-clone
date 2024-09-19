@@ -1,232 +1,230 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+/* General styling */
 body {
-  font-family: 'Inter', sans-serif;
-  background-color: #141414;
+  background-color: #000000;
+  margin: 0;
+  font-family: "Inter", system-ui;
+  font-weight: 600;
   color: white;
-  padding: 20px;
-}
-
-#header-container {
-  background-color: #111;
-  padding: 20px 0;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 20px;
+  padding: 20px;
 }
 
-#navigation ul {
-  display: flex;
+.logo img {
+  height: 60px;
+}
+
+.navigation ul {
   list-style: none;
+  display: flex;
+  gap: 50px;
 }
 
-#navigation li {
-  margin: 0 15px;
-}
-
-#navigation a {
-  color: white;
+.navigation li a {
   text-decoration: none;
-  font-weight: 600;
+  color: white;
 }
 
-#search img {
+.search img {
+  width: 30px;
   cursor: pointer;
 }
 
-#main-content {
-  padding: 90px;
-  display: grid;
-  grid-template-columns: 4fr 1fr;
-  color: white;
-
-  gap: 8px;
-  align-items: center;
+.trending-container {
+  margin-top: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  gap: 50px;
+  flex-wrap: wrap;
 }
 
-#main-content img {
-  width: 500px;
-  height: 573px;
-}
-
-#image-movie {
-
-}
-
-#watch-btn, #add-btn {
-  color: white;
-  background-color: #961010;
-  width: 142px;
-  height: 40px;
-  border: none;
-  border-radius: 13px;
-}
-
-#add-btn {
-  background-color: hsla(0, 3%, 31%, 0.78);
-}
-
-#description {
-  width: 500px;
-}
-
-#duration, #name, #description {
-  margin-bottom: 16px;
-}
-
-
-
-#genre-container ul{
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-   list-style: none;
-   gap: 100px;
-}
-
-#genre-container li {
-  color: white;
- /* text-decoration: underline red;
-  text-underline-offset: 99px; 
-  text-decoration-thickness: 5px; */
-}
-
-
-
-#genre-container li:hover{
- cursor: pointer;
-}
-
-
-
-#movie-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
-  margin-top: 100px;
-}
-
-.movie-card {
-  background-color: #333;
-  padding: 10px;
- 
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-
-.movie-card:hover {
-  transform: scale(1.05);
-}
-
-.movie-poster {
+.trending-container img {
+  height: 400px;
   width: 100%;
-  
+  max-width: 400px;
+  border-radius: 10px;
 }
 
-.movie-title {
-  margin: 10px 0 5px;
-  font-size: 16px;
-  font-weight: 600;
+#movie-description {
+  width: 100%;
+  max-width: 600px;
 }
 
-.movie-year {
-  font-size: 14px;
-  color: #888;
+#move-name {
+  font-size: 28px;
 }
 
-/* Media query for smaller screens */
+.watch, .add {
+  width: 120px;
+  height: 38px;
+  border-radius: 10px;
+  background-color: red;
+  color: white;
+  font-size: 15px;
+  border: none;
+  cursor: pointer;
+}
+
+.add {
+  background-color: #454343;
+}
+
+.add-watchBtn {
+  display: flex;
+  gap: 20px;
+}
+
+.main-content {
+  display: grid;
+  justify-content: center;
+}
+
+.next-prevBtn {
+  margin: 20px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.next-prevBtn button {
+  width: 60px;
+  height: 9px;
+  cursor: pointer;
+  background-color: #D9D9D9;
+}
+
+#swipe {
+  width: 40px;
+  height: 50px;
+}
+
+.trend-container {
+  display: grid;
+  gap: 50px;
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Flexbox for the movies inside each genre */
+.movies-row {
+  display: flex;
+  gap: 10px; /* Add some space between each movie */
+  overflow-x: auto; /* Makes it scroll horizontally */
+  padding: 10px 0; /* Add some padding */
+}
+
+.movie-item {
+  min-width: 200px;
+  flex-shrink: 0;
+}
+
+.imgContainer img {
+  width: 100%;
+  max-width: 342px;
+  height: auto;
+}
+
+.genre-block {
+  margin-bottom: 30px;
+}
+
+.categoryName {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+/* Media Queries for smaller screens */
+
+/* Tablets */
 @media (max-width: 768px) {
-  #header-container {
-    flex-direction: column;
-    padding: 20px;
-  }
-
-  .header {
+  .trending-container {
     flex-direction: column;
     align-items: center;
-    gap: 10px;
   }
 
-  #navigation ul {
+  .trending-container img {
+    height: auto;
+    width: 100%;
+    max-width: 350px;
+  }
+
+  .watch, .add {
+    width: 100px;
+  }
+
+  .add-watchBtn {
+    gap: 15px;
+  }
+
+  #move-name {
+    font-size: 24px;
+  }
+
+  .navigation ul {
+    gap: 30px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .header {
     flex-direction: column;
+    align-items: flex-start;
     gap: 20px;
   }
 
-  #main-content {
+  .navigation ul {
     flex-direction: column;
-    padding: 20px;
-  }
-
-  #main-content img {
-    width: 100%;
-    height: auto;
-  }
-
-  #image-movie {
-    width: 100%;
-    height: auto;
-  }
-
-  #watch-btn, #add-btn {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  #description {
-    width: 100%;
-  }
-
-  #duration, #name, #description {
-    text-align: center;
-  }
-}
-
-/* Media query for very small screens (e.g., mobile phones) */
-@media (max-width: 480px) {
-  body {
-    font-size: 14px;
-  }
-
-  #main-content {
-    padding: 10px;
-  }
-
-  #header-container {
-    padding: 10px;
-  }
-
-  .header {
-    gap: 5px;
-  }
-
-  #navigation ul {
     gap: 10px;
   }
 
-  #main-content img {
+  .trending-container {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column layout */
+    margin-top: 20px;
+    gap: 20px;
+  }
+
+  .trending-container img {
     width: 100%;
     height: auto;
+    max-width: 300px; /* Reduced max-width for smaller screens */
   }
 
-  #watch-btn, #add-btn {
-    width: 100%;
-    height: 40px;
+  .next-prevBtn {
+    margin: 20px 0;
+    gap: 10px;
   }
 
-  #description {
-    width: 100%;
+  .watch, .add {
+    width: 100px;
   }
 
-  #duration, #name, #description {
+  .add-watchBtn {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .movies-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Grid layout for movies */
+    gap: 10px;
+  }
+
+  #move-name {
+    font-size: 18px;
+  }
+
+  #movie-description {
     font-size: 14px;
   }
 }
-
-
